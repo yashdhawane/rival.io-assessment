@@ -7,6 +7,12 @@ interface ActivityLogProps {
   taskId: string
 }
 
+interface Activity {
+  id: string
+  description: string
+  createdAt: string
+}
+
 export default function ActivityLog({ taskId }: ActivityLogProps) {
   const { data: activities = [], isLoading, error } = useQuery({
     queryKey: ['activities', taskId],
@@ -32,7 +38,7 @@ export default function ActivityLog({ taskId }: ActivityLogProps) {
     <div className="space-y-3">
       <h3 className="text-lg font-semibold">Activity Log</h3>
       <div className="space-y-2">
-        {activities.map((activity) => (
+        {activities.map((activity: Activity) => (
           <div
             key={activity.id}
             className="p-3 bg-gray-50 dark:bg-gray-700 rounded-lg border-l-4 border-blue-500"

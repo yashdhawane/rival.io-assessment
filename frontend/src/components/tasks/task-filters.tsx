@@ -31,13 +31,13 @@ export default function TaskFilters({
           label="Search"
           placeholder="Search tasks..."
           value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => onSearchChange(e.target.value)}
         />
 
         <Select
           label="Status"
           value={status}
-          onChange={(e) => onStatusChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onStatusChange(e.target.value)}
           options={[
             { value: '', label: 'All Statuses' },
             { value: 'pending', label: 'Pending' },
@@ -49,7 +49,7 @@ export default function TaskFilters({
         <Select
           label="Sort By"
           value={sortBy}
-          onChange={(e) => onSortChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSortChange(e.target.value)}
           options={[
             { value: '', label: 'Default' },
             { value: 'dueDate', label: 'Due Date' },
@@ -61,7 +61,7 @@ export default function TaskFilters({
         <Select
           label="Sort Order"
           value={sortOrder}
-          onChange={(e) => onSortOrderChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onSortOrderChange(e.target.value)}
           options={[
             { value: 'desc', label: 'Descending' },
             { value: 'asc', label: 'Ascending' },
