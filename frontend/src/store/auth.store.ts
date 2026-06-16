@@ -33,12 +33,15 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true })
         try {
           const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
-          const headers: HeadersInit = { credentials: 'include' }
+          const headers: Record<string, string> = {}
           if (token) {
             headers['Authorization'] = `Bearer ${token}`
           }
           
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, headers)
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
+            credentials: 'include',
+            headers,
+          })
           if (response.ok) {
             const data = await response.json()
             set({ user: data.data.user })
