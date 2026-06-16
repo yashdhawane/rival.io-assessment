@@ -26,6 +26,7 @@ export default function LoginForm() {
       // Store token in localStorage for cross-domain authentication
       if (response.data.data.token) {
         localStorage.setItem('token', response.data.data.token)
+        console.log('[LoginForm] Token stored in localStorage')
       }
       router.push('/dashboard')
     } catch (error: any) {

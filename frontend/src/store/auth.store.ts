@@ -33,6 +33,8 @@ export const useAuthStore = create<AuthState>()(
         set({ isLoading: true })
         try {
           const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+          console.log('[AuthStore] checkAuth - token from localStorage:', token ? 'present' : 'not present')
+          
           const headers: Record<string, string> = {}
           if (token) {
             headers['Authorization'] = `Bearer ${token}`
@@ -42,13 +44,18 @@ export const useAuthStore = create<AuthState>()(
             credentials: 'include',
             headers,
           })
+          
+          console.log('[AuthStore] checkAuth - response status:', response.status)
+          
           if (response.ok) {
             const data = await response.json()
             set({ user: data.data.user })
           } else {
+            console.log('[AuthStore] checkAuth - response not ok, clearing user')
             set({ user: null })
           }
         } catch (error) {
+          console.error('[AuthStore] checkAuth - error:', error)
           set({ user: null })
         } finally {
           set({ isLoading: false })

@@ -14,8 +14,8 @@ export class AuthController {
       // Set httpOnly cookie
       res.cookie('token', result.token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        secure: true, // Always true for cross-domain
+        sameSite: 'none', // Required for cross-domain
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
 
@@ -46,8 +46,8 @@ export class AuthController {
       // Set httpOnly cookie
       res.cookie('token', result.token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production' ? true : false,
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+        secure: true, // Always true for cross-domain
+        sameSite: 'none', // Required for cross-domain
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       })
 
