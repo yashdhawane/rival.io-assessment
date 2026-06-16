@@ -45,6 +45,7 @@ export class TaskController {
   async getTasks(req: AuthRequest, res: Response) {
     try {
       const userId = req.user?.userId
+      console.log('[TaskController] getTasks - userId:', userId)
       if (!userId) {
         return res.status(401).json({
           success: false,
@@ -62,6 +63,8 @@ export class TaskController {
       const sortBy = req.query.sortBy as string
       const sortOrder = (req.query.sortOrder as string) || 'desc'
 
+      console.log('[TaskController] getTasks - query params:', { page, limit, search, status, sortBy, sortOrder })
+
       let result
 
       if (search) {
@@ -73,6 +76,8 @@ export class TaskController {
       } else {
         result = await taskService.getTasks(userId, page, limit)
       }
+
+      console.log('[TaskController] getTasks - result tasks count:', result.tasks?.length)
 
       res.status(200).json({
         success: true,

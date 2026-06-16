@@ -22,6 +22,7 @@ export class TaskService {
   }
 
   async getTasks(userId: string, page: number = 1, limit: number = 10) {
+    console.log('[TaskService] getTasks - userId:', userId, 'page:', page, 'limit:', limit)
     return taskRepository.findByUserId(userId, page, limit)
   }
 
