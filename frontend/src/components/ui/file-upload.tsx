@@ -136,6 +136,12 @@ export default function FileUpload({ taskId, onUploadSuccess, onUploadError }: F
       
 
       // Get upload signature from backend
+      const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+      const headers: Record<string, string> = {}
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`
+      }
+
       const signatureResponse = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/attachments/tasks/${taskId}/attachments/signature`,
         {
@@ -144,7 +150,8 @@ export default function FileUpload({ taskId, onUploadSuccess, onUploadError }: F
           size: uploadState.file.size,
         },
         {
-          withCredentials: true
+          withCredentials: true,
+          headers,
         }
       )
 
@@ -167,7 +174,8 @@ export default function FileUpload({ taskId, onUploadSuccess, onUploadError }: F
           publicId: signatureResponse.data.data.publicId,
         },
         {
-          withCredentials: true
+          withCredentials: true,
+          headers,
         }
       )
 
