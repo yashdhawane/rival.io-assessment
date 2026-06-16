@@ -22,13 +22,23 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isLoading: false,
       setUser: (user) => set({ user }),
-      logout: () => set({ user: null }),
+      logout: () => {
+        set({ user: null })
+        // Remove token from localStorage for cross-domain authentication
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('token')
+        }
+      },
       checkAuth: async () => {
         set({ isLoading: true })
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, {
-            credentials: 'include',
-          })
+          const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+          const headers: HeadersInit = { credentials: 'include' }
+          if (token) {
+            headers['Authorization'] = `Bearer ${token}`
+          }
+          
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/me`, headers)
           if (response.ok) {
             const data = await response.json()
             set({ user: data.data.user })

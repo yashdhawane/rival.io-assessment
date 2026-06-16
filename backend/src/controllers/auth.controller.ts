@@ -14,15 +14,14 @@ export class AuthController {
       // Set httpOnly cookie
       res.cookie('token', result.token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       })
 
       res.status(201).json({
         success: true,
-        data: { user: result.user },
+        data: { user: result.user, token: result.token },
       })
     } catch (error: any) {
       console.error('[AuthController] signup - error:', error)
@@ -47,15 +46,14 @@ export class AuthController {
       // Set httpOnly cookie
       res.cookie('token', result.token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        domain: process.env.NODE_ENV === 'production' ? '.onrender.com' : undefined,
       })
 
       res.status(200).json({
         success: true,
-        data: { user: result.user },
+        data: { user: result.user, token: result.token },
       })
     } catch (error: any) {
       console.error('[AuthController] login - error:', error)

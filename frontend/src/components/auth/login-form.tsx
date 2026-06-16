@@ -23,6 +23,10 @@ export default function LoginForm() {
     try {
       const response = await authApi.login(data)
       setUser(response.data.data.user)
+      // Store token in localStorage for cross-domain authentication
+      if (response.data.data.token) {
+        localStorage.setItem('token', response.data.data.token)
+      }
       router.push('/dashboard')
     } catch (error: any) {
       console.error('Login error:', error.response?.data?.error?.message || 'Login failed')

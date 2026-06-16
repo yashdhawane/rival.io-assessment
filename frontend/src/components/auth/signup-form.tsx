@@ -23,6 +23,10 @@ export default function SignupForm() {
     try {
       const response = await authApi.signup(data)
       setUser(response.data.data.user)
+      // Store token in localStorage for cross-domain authentication
+      if (response.data.data.token) {
+        localStorage.setItem('token', response.data.data.token)
+      }
       router.push('/dashboard')
     } catch (error: any) {
       console.error('Signup error:', error.response?.data?.error?.message || 'Signup failed')

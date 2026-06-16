@@ -9,11 +9,16 @@ export const api = axios.create({
   withCredentials: true, // Important for httpOnly cookies
 })
 
-// Add request interceptor for logging
+// Add request interceptor to include token from localStorage
 api.interceptors.request.use(
   (config) => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     console.log('[API] Request:', config.method?.toUpperCase(), config.url, config.baseURL)
     console.log('[API] Full URL:', (config.baseURL || '') + (config.url || ''))
+    console.log('[API] Token present:', token ? 'yes' : 'no')
     return config
   },
   (error) => {

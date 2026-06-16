@@ -17,9 +17,7 @@ const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
 
 // Middleware
 app.use(cors({
-  origin: process.env.NODE_ENV === 'production' 
-    ? ['https://rival-io-assessment-fe.onrender.com', 'https://rival-io-assessment-fe.onrender.com']
-    : FRONTEND_URL,
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
