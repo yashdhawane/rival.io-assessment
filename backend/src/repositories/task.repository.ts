@@ -63,8 +63,17 @@ export class TaskRepository {
   }
 
   async update(id: string, userId: string, data: any) {
-    return prisma.task.update({
+    // First check if task belongs to user
+    const existingTask = await prisma.task.findFirst({
       where: { id, userId },
+    })
+    
+    if (!existingTask) {
+      throw new Error('Task not found or access denied')
+    }
+    
+    return prisma.task.update({
+      where: { id },
       data,
       include: {
         attachments: true,
@@ -75,8 +84,17 @@ export class TaskRepository {
 
   async delete(id: string, userId: string) {
     console.log('[TaskRepository] delete - id:', id, 'userId:', userId)
-    const task = await prisma.task.delete({
+    // First check if task belongs to user
+    const existingTask = await prisma.task.findFirst({
       where: { id, userId },
+    })
+    
+    if (!existingTask) {
+      throw new Error('Task not found or access denied')
+    }
+    
+    const task = await prisma.task.delete({
+      where: { id },
     })
     console.log('[TaskRepository] delete - task deleted')
     return task

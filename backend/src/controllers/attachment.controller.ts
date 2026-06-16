@@ -23,6 +23,19 @@ export class AttachmentController {
       const taskIdString = Array.isArray(taskId) ? taskId[0] : taskId
       const { filename, mimeType, size } = req.body
 
+      // Verify task ownership
+      const { taskRepository } = await import('../repositories/task.repository')
+      const task = await taskRepository.findById(taskIdString, userId)
+      if (!task) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'Task not found or access denied',
+            code: 'TASK_NOT_FOUND',
+          },
+        })
+      }
+
       // Validate file
       const file = new File([], filename, { type: mimeType })
       Object.defineProperty(file, 'size', { value: size })
@@ -82,6 +95,19 @@ export class AttachmentController {
       const taskIdString = Array.isArray(taskId) ? taskId[0] : taskId
       const { filename, originalName, mimeType, size, url, publicId } = req.body
 
+      // Verify task ownership
+      const { taskRepository } = await import('../repositories/task.repository')
+      const task = await taskRepository.findById(taskIdString, userId)
+      if (!task) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'Task not found or access denied',
+            code: 'TASK_NOT_FOUND',
+          },
+        })
+      }
+
       const attachment = await attachmentService.createAttachment({
         filename,
         originalName,
@@ -138,6 +164,19 @@ export class AttachmentController {
       const taskIdString = Array.isArray(taskId) ? taskId[0] : taskId
       console.log('[AttachmentController] uploadAttachment - taskId:', taskIdString)
 
+      // Verify task ownership
+      const { taskRepository } = await import('../repositories/task.repository')
+      const task = await taskRepository.findById(taskIdString, userId)
+      if (!task) {
+        return res.status(404).json({
+          success: false,
+          error: {
+            message: 'Task not found or access denied',
+            code: 'TASK_NOT_FOUND',
+          },
+        })
+      }
+
       if (!req.file) {
         return res.status(400).json({
           success: false,
@@ -187,7 +226,7 @@ export class AttachmentController {
       const taskIdString = Array.isArray(taskId) ? taskId[0] : taskId
       console.log('[AttachmentController] getAttachments - taskId:', taskIdString)
 
-      const attachments = await attachmentService.getAttachmentsByTaskId(taskIdString)
+      const attachments = await attachmentService.getAttachmentsByTaskId(taskIdString, userId)
       console.log('[AttachmentController] getAttachments - attachments retrieved:', attachments)
 
       res.status(200).json({

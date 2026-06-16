@@ -68,16 +68,16 @@ export class AttachmentService {
     return attachment
   }
 
-  async getAttachmentsByTaskId(taskId: string) {
-    console.log('[AttachmentService] getAttachmentsByTaskId - taskId:', taskId)
-    const attachments = await attachmentRepository.findByTaskId(taskId)
+  async getAttachmentsByTaskId(taskId: string, userId: string) {
+    console.log('[AttachmentService] getAttachmentsByTaskId - taskId:', taskId, 'userId:', userId)
+    const attachments = await attachmentRepository.findByTaskId(taskId, userId)
     console.log('[AttachmentService] getAttachmentsByTaskId - attachments:', attachments)
     return attachments
   }
 
   async deleteAttachment(id: string, taskId: string, userId: string) {
     console.log('[AttachmentService] deleteAttachment - id:', id, 'taskId:', taskId, 'userId:', userId)
-    const attachment = await attachmentRepository.findById(id)
+    const attachment = await attachmentRepository.findById(id, userId)
     console.log('[AttachmentService] deleteAttachment - attachment found:', attachment ? 'yes' : 'no')
     if (!attachment) {
       throw new Error('Attachment not found')
@@ -88,7 +88,7 @@ export class AttachmentService {
     console.log('[AttachmentService] deleteAttachment - deleted from cloudinary')
 
     // Delete from database
-    await attachmentRepository.delete(id)
+    await attachmentRepository.delete(id, userId)
     console.log('[AttachmentService] deleteAttachment - deleted from database')
 
     // Log activity
