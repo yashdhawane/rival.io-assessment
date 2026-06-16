@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { taskApi } from '@/lib/api'
+import { useAuthStore } from '@/store/auth.store'
 import TaskCard from './task-card'
 import TaskFilters from './task-filters'
 import TaskPagination from './task-pagination'
@@ -13,6 +14,7 @@ import { useDebounce } from '@/hooks/use-debounce'
 export default function TaskList() {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const { user } = useAuthStore()
   
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
@@ -23,7 +25,7 @@ export default function TaskList() {
   const debouncedSearch = useDebounce(search, 300)
 
   const { data, isLoading, error } = useQuery({
-    queryKey: ['tasks', page, debouncedSearch, status, sortBy, sortOrder],
+    queryKey: ['tasks', user?.id, page, debouncedSearch, status, sortBy, sortOrder],
     queryFn: async () => {
       const params: any = {
         page,
@@ -37,14 +39,15 @@ export default function TaskList() {
       const response = await taskApi.getAll(params)
       return response.data.data
     },
+    enabled: !!user?.id,
   })
 
   const deleteMutation = useMutation({
     mutationFn: taskApi.delete,
     onMutate: async (id: string) => {
       await queryClient.cancelQueries({ queryKey: ['tasks'] })
-      const previousTasks = queryClient.getQueryData(['tasks', page, debouncedSearch, status, sortBy, sortOrder])
-      queryClient.setQueryData(['tasks', page, debouncedSearch, status, sortBy, sortOrder], (old: any) => ({
+      const previousTasks = queryClient.getQueryData(['tasks', user?.id, page, debouncedSearch, status, sortBy, sortOrder])
+      queryClient.setQueryData(['tasks', user?.id, page, debouncedSearch, status, sortBy, sortOrder], (old: any) => ({
         ...old,
         tasks: old?.tasks?.filter((task: any) => task.id !== id) || [],
         pagination: {
@@ -55,7 +58,7 @@ export default function TaskList() {
       return { previousTasks }
     },
     onError: (error: any, id: string, context: any) => {
-      queryClient.setQueryData(['tasks', page, debouncedSearch, status, sortBy, sortOrder], context.previousTasks)
+      queryClient.setQueryData(['tasks', user?.id, page, debouncedSearch, status, sortBy, sortOrder], context.previousTasks)
       if (error.response?.status !== 404) {
         alert('Failed to delete task. Please try again.')
       }
