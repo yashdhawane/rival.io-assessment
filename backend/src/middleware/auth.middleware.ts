@@ -38,7 +38,7 @@ export function authMiddleware(req: AuthRequest, res: Response, next: NextFuncti
   }
 
   try {
-    console.log('[AuthMiddleware] authMiddleware - verifying token', token)
+    console.log('[AuthMiddleware] authMiddleware - verifying token')
     const decoded = verifyToken(token)
     console.log('[AuthMiddleware] authMiddleware - token decoded:', decoded)
     req.user = decoded

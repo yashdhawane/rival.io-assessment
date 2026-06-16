@@ -63,8 +63,6 @@ export class TaskController {
       const sortBy = req.query.sortBy as string
       const sortOrder = (req.query.sortOrder as string) || 'desc'
 
-      console.log('[TaskController] getTasks - query params:', { page, limit, search, status, sortBy, sortOrder })
-
       let result
 
       if (search) {
@@ -76,8 +74,6 @@ export class TaskController {
       } else {
         result = await taskService.getTasks(userId, page, limit)
       }
-
-      console.log('[TaskController] getTasks - result tasks count:', result.tasks?.length)
 
       res.status(200).json({
         success: true,

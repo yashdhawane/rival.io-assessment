@@ -3,7 +3,9 @@ import { prisma } from '../config/database'
 export class TaskRepository {
   async findByUserId(userId: string, page: number = 1, limit: number = 10) {
     console.log('[TaskRepository] findByUserId - userId:', userId, 'page:', page, 'limit:', limit)
+    console.log('[TaskRepository] findByUserId - userId type:', typeof userId)
     const skip = (page - 1) * limit
+    
     const [tasks, total] = await Promise.all([
       prisma.task.findMany({
         where: { userId },
